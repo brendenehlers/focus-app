@@ -16,6 +16,7 @@ const FocusedTask: React.FC<Props> = (props) => {
 	return (
 		<div className='shadow-lg px-8 py-4 border border-grey-50 rounded-md'>
 			<h1 className='text-lg text-center font-bold'>Focused Task</h1>
+			<div className='mt-1 mb-2 border  rounded' />
 			<TaskItem {...props} />
 		</div>
 	)

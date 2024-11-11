@@ -2,11 +2,15 @@ import { useState } from 'react'
 
 import Task from '../data/Task'
 import Button from './Button'
+import Input from './Input'
+import SubmitButton from './SubmitButton'
+
+type Orientation = 'row' | 'col'
 
 type Props = {
 	task: Task
 	isFocused: boolean
-	orientation: 'row' | 'col'
+	orientation: Orientation
 
 	onFocusTask: (task: Task) => void
 	onRemoveFocus: () => void
@@ -49,9 +53,7 @@ const ViewTaskItem: React.FC<Props & ViewProps> = ({
 	onEdit,
 	onDeleteTask,
 }) => (
-	<article
-		className={`flex flex-${orientation} gap-2 items-center w-full px-4 py-2`}
-	>
+	<TaskItemWrapper orientation={orientation}>
 		<h2 className='font-md font-semibold'>{task.name}</h2>
 		<p
 			className={`text-sm text-gray-700 ${
@@ -61,8 +63,8 @@ const ViewTaskItem: React.FC<Props & ViewProps> = ({
 			Priority: {task.priority}
 		</p>
 		{orientation === 'row' ? (
-			<div className='float-end flex flex-row'>
-				<div className='flex flex-col'>
+			<div className='float-end flex flex-row gap-1'>
+				<div className='flex flex-col gap-1'>
 					<Button onClick={() => onFinishTask(task)}>Finish</Button>
 					{isFocused ? (
 						<Button onClick={onRemoveFocus}>Unfocus</Button>
@@ -70,14 +72,14 @@ const ViewTaskItem: React.FC<Props & ViewProps> = ({
 						<Button onClick={() => onFocusTask(task)}>Focus</Button>
 					)}
 				</div>
-				<div className='flex flex-col'>
+				<div className='flex flex-col gap-1'>
 					<Button onClick={onEdit}>Edit</Button>
 					<Button onClick={() => onDeleteTask(task)}>Delete</Button>
 				</div>
 			</div>
 		) : (
 			<div>
-				<div className='float-end flex flex-row'>
+				<div className='float-end flex flex-row gap-2'>
 					<Button onClick={() => onFinishTask(task)}>Finish</Button>
 					{isFocused ? (
 						<Button onClick={onRemoveFocus}>Unfocus</Button>
@@ -89,7 +91,7 @@ const ViewTaskItem: React.FC<Props & ViewProps> = ({
 				</div>
 			</div>
 		)}
-	</article>
+	</TaskItemWrapper>
 )
 
 type EditProps = {
@@ -98,6 +100,7 @@ type EditProps = {
 }
 const EditTaskItem: React.FC<Props & EditProps> = ({
 	task,
+	orientation,
 	onSubmit,
 	onClose,
 }) => {
@@ -120,21 +123,35 @@ const EditTaskItem: React.FC<Props & EditProps> = ({
 	}
 
 	return (
-		<article>
-			<input
+		<TaskItemWrapper orientation={orientation}>
+			<Input
 				type='text'
 				value={name}
 				onChange={(e) => setName(e.target.value)}
 			/>
-			<input
+			<Input
+				className='mr-auto'
 				type='number'
 				value={priority}
 				onChange={(e) => setPriority(parseInt(e.target.value))}
 			/>
 			<Button onClick={handleCancel}>Cancel</Button>
-			<Button onClick={() => handleSubmit()}>Submit</Button>
-		</article>
+			<SubmitButton onClick={() => handleSubmit()}>Submit</SubmitButton>
+		</TaskItemWrapper>
 	)
 }
+
+type TaskItemWrapperProps = {
+	orientation: Orientation
+}
+const TaskItemWrapper: React.FC<
+	React.PropsWithChildren<TaskItemWrapperProps>
+> = ({ children, orientation }) => (
+	<article
+		className={`flex flex-${orientation} gap-2 items-center w-full px-4 py-2`}
+	>
+		{children}
+	</article>
+)
 
 export default TaskItem
