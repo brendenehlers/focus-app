@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   focus-app:
-    image: behlers22/focus-app
+    image: behlers22/focus-app:linux-amd64
     container_name: focus-app
     ports:
       - "3000:3000"
